@@ -1,0 +1,19 @@
+name: 'nightly artifacts cleanup'
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Start Cleanup artifacts'
+        required: false
+        default: 'Cleanup artifacts'
+  schedule:
+    - cron: '0 1 * * 0' # every night at 1 am UTC
+
+jobs:
+  delete-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: ${{ secrets.EKIP_PAT }}
+          expire-in: 3 days

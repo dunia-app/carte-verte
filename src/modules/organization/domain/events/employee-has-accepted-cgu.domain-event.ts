@@ -1,0 +1,15 @@
+import {
+  DomainEvent,
+  DomainEventProps,
+} from '../../../../libs/ddd/domain/domain-events/index'
+
+// DomainEvent is a plain object with properties
+export class EmployeeHasAcceptedCguDomainEvent extends DomainEvent {
+  persistEvent: boolean = true
+  constructor(props: DomainEventProps<EmployeeHasAcceptedCguDomainEvent>) {
+    super(props)
+    this.userId = props.userId
+  }
+
+  readonly userId: string
+}

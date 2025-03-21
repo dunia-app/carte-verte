@@ -1,0 +1,10 @@
+node_modules
+log
+dist
+env
+
+# Ignore IDE files
+.idea
+.vscode
+*.sublime-project
+docker-compose.yml

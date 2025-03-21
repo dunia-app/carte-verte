@@ -1,0 +1,29 @@
+export interface CreatePayinInput {
+  amount: number
+  currency: string
+  walletId: string
+  userId: string
+  topupCardId: string
+  acceptUrl: string
+  declineUrl: string
+  pendingUrl: string
+  exceptionUrl: string
+  cancelUrl: string
+  eci: string
+  authenticationIndicator: string
+  orderId: string
+  description: string
+  messageToUser: string
+  paymentProduct: string
+  deviceChannel: number
+  browserInfo: {}
+  country: string
+  firstname: string
+  lastname: string
+  email: string
+  phone: string
+  streetAddress: string
+  city: string
+  zipCode: string
+  cardHolder: string
+}

@@ -1,0 +1,19 @@
+import { RepositoryPort } from '../../../../libs/ddd/domain/ports/repository.ports'
+import {
+  AdvantageMerchantCategoryEntity,
+  AdvantageMerchantCategoryProps,
+} from '../../domain/entities/advantage-merchant-category.entity'
+
+/* Repository port belongs to application's core, but since it usually
+ changes together with repository it is kept in the same directory for
+ convenience. */
+export interface AdvantageMerchantCategoryRepositoryPort
+  extends RepositoryPort<
+    AdvantageMerchantCategoryEntity,
+    AdvantageMerchantCategoryProps
+  > {
+  findOneByAdvantageIdOrThrow(
+    advantageId: string,
+  ): Promise<AdvantageMerchantCategoryEntity>
+  exists(advantageId: string, merchantCategoryId: string): Promise<boolean>
+}

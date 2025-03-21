@@ -1,0 +1,185 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - staging
+env:
+  BUILD_DIR: fresh_build
+  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+  SECRETS_EXTENSION: ${{ github.ref == 'refs/heads/master' && 'PROD' || 'STAGING' }}
+jobs:
+  build-test:
+    runs-on: ubuntu-20.04
+    container: node:22
+    timeout-minutes: 15
+    services:
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+      postgres:
+        # Docker Hub image
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE_NAME: postgres
+      ENV_FILE: test_ci.env
+      PROJECT_ID: carte-verte
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history
+
+      - name: Google authentication
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ env.GOOGLE_CREDENTIALS }}
+
+      - name: Loading Google Secrets (Production)
+        id: secrets
+        uses: google-github-actions/get-secretmanager-secrets@v2
+        with:
+          secrets: |-
+            DB_PASSWORD:${{ env.PROJECT_ID }}/DB_PASSWORD_${{ env.SECRETS_EXTENSION }}
+            DB_PORT:${{ env.PROJECT_ID }}/DB_PORT_${{ env.SECRETS_EXTENSION }}
+            REDIS_PORT:${{ env.PROJECT_ID }}/REDIS_PORT_${{ env.SECRETS_EXTENSION }}
+            REDIS_HOST:${{ env.PROJECT_ID }}/REDIS_HOST_${{ env.SECRETS_EXTENSION }}
+            JWT_SECRET:${{ env.PROJECT_ID }}/JWT_SECRET_${{ env.SECRETS_EXTENSION }}
+            MAILJET_KEY:${{ env.PROJECT_ID }}/MAILJET_KEY_${{ env.SECRETS_EXTENSION }}
+            MAILJET_SECRET:${{ env.PROJECT_ID }}/MAILJET_SECRET_${{ env.SECRETS_EXTENSION }}
+            MAILJET_SMS_TOKEN:${{ env.PROJECT_ID }}/MAILJET_SMS_TOKEN_${{ env.SECRETS_EXTENSION }}
+            ADMIN_PWD:${{ env.PROJECT_ID }}/ADMIN_PWD_${{ env.SECRETS_EXTENSION }}
+            ADMIN_FIRST_PWD:${{ env.PROJECT_ID }}/ADMIN_FIRST_PWD_${{ env.SECRETS_EXTENSION }}
+            APP_SALT:${{ env.PROJECT_ID }}/APP_SALT_${{ env.SECRETS_EXTENSION }}
+            DB_HOST:${{ env.PROJECT_ID }}/DB_HOST_${{ env.SECRETS_EXTENSION }}
+            DEMO_TEL:${{ env.PROJECT_ID }}/DEMO_TEL_${{ env.SECRETS_EXTENSION }}
+            DEMO_CODE:${{ env.PROJECT_ID }}/DEMO_CODE_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_URL:${{ env.PROJECT_ID }}/TREEZOR_URL_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_PUBLIC_URL:${{ env.PROJECT_ID }}/TREEZOR_PUBLIC_URL_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_ID:${{ env.PROJECT_ID }}/TREEZOR_ID_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_SECRET:${{ env.PROJECT_ID }}/TREEZOR_SECRET_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_MASTER_WALLET_ID:${{ env.PROJECT_ID }}/TREEZOR_MASTER_WALLET_ID_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_COUNTRY_RESTRICTION_GROUP_ID:${{ env.PROJECT_ID }}/TREEZOR_COUNTRY_RESTRICTION_GROUP_ID_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_MCC_RESTRICTION_GROUP_ID:${{ env.PROJECT_ID }}/TREEZOR_MCC_RESTRICTION_GROUP_ID_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_MID_RESTRICTION_GROUP_ID:${{ env.PROJECT_ID }}/TREEZOR_MID_RESTRICTION_GROUP_ID_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_WEBHOOK_SIGNATURE:${{ env.PROJECT_ID }}/TREEZOR_WEBHOOK_SIGNATURE_${{ env.SECRETS_EXTENSION }}
+            TREEZOR_CLIENT_ID:${{ env.PROJECT_ID }}/TREEZOR_CLIENT_ID_${{ env.SECRETS_EXTENSION }}
+            SIRET_API_TOKEN:${{ env.PROJECT_ID }}/SIRET_API_TOKEN_${{ env.SECRETS_EXTENSION }}
+            SIRET_API_URI:${{ env.PROJECT_ID }}/SIRET_API_URI_${{ env.SECRETS_EXTENSION }}
+            EKIP_ACCOUNT_IBAN:${{ env.PROJECT_ID }}/EKIP_ACCOUNT_IBAN_${{ env.SECRETS_EXTENSION }}
+            EKIP_ACCOUNT_BIC:${{ env.PROJECT_ID }}/EKIP_ACCOUNT_BIC_${{ env.SECRETS_EXTENSION }}
+            PLAYSTORE_DEMO_EMAIL:${{ env.PROJECT_ID }}/PLAYSTORE_DEMO_EMAIL_${{ env.SECRETS_EXTENSION }}
+            APPLESTORE_DEMO_EMAIL:${{ env.PROJECT_ID }}/APPLESTORE_DEMO_EMAIL_${{ env.SECRETS_EXTENSION }}
+            DEMO_EMAIL_TOKEN:${{ env.PROJECT_ID }}/DEMO_EMAIL_TOKEN_${{ env.SECRETS_EXTENSION }}
+            STRIPE_API_KEY:${{ env.PROJECT_ID }}/STRIPE_API_KEY_${{ env.SECRETS_EXTENSION }}
+            STRIPE_WEBHOOK_SIGNATURE:${{ env.PROJECT_ID }}/STRIPE_WEBHOOK_SIGNATURE_${{ env.SECRETS_EXTENSION }}
+            STRIPE_SUCCESS_URL:${{ env.PROJECT_ID }}/STRIPE_SUCCESS_URL_${{ env.SECRETS_EXTENSION }}
+            STRIPE_CANCELED_URL:${{ env.PROJECT_ID }}/STRIPE_CANCELED_URL_${{ env.SECRETS_EXTENSION }}
+            ZVENTREPRISE_ID:${{ env.PROJECT_ID }}/ZVENTREPRISE_ID_${{ env.SECRETS_EXTENSION }}
+            ZVENTREPRISE_PASSWORD:${{ env.PROJECT_ID }}/ZVENTREPRISE_PASSWORD_${{ env.SECRETS_EXTENSION }}
+            ZVENTREPRISE_URL:${{ env.PROJECT_ID }}/ZVENTREPRISE_URL_${{ env.SECRETS_EXTENSION }}
+            OCTOPUSH_LOGIN:${{ env.PROJECT_ID }}/OCTOPUSH_LOGIN_${{ env.SECRETS_EXTENSION }}
+            OCTOPUSH_KEY:${{ env.PROJECT_ID }}/OCTOPUSH_KEY_${{ env.SECRETS_EXTENSION }}
+            OCTOPUSH_URL:${{ env.PROJECT_ID }}/OCTOPUSH_URL_${{ env.SECRETS_EXTENSION }}
+            GO_CARDLESS_API_KEY:${{ env.PROJECT_ID }}/GO_CARDLESS_API_KEY_${{ env.SECRETS_EXTENSION }}
+            GO_CARDLESS_SUCCESS_URL:${{ env.PROJECT_ID }}/GO_CARDLESS_SUCCESS_URL_${{ env.SECRETS_EXTENSION }}
+            GO_CARDLESS_CANCELED_URL:${{ env.PROJECT_ID }}/GO_CARDLESS_CANCELED_URL_${{ env.SECRETS_EXTENSION }}
+            HIPAY_USERNAME:${{ env.PROJECT_ID }}/HIPAY_USERNAME_${{ env.SECRETS_EXTENSION }}
+            HIPAY_PASSWORD:${{ env.PROJECT_ID }}/HIPAY_PASSWORD_${{ env.SECRETS_EXTENSION }}
+            HIPAY_URL:${{ env.PROJECT_ID }}/HIPAY_URL_PROD_PROD
+            HIPAY_ACCEPT_URL:${{ env.PROJECT_ID }}/HIPAY_ACCEPT_URL_${{ env.SECRETS_EXTENSION }}
+            HIPAY_DECLINE_URL:${{ env.PROJECT_ID }}/HIPAY_DECLINE_URL_${{ env.SECRETS_EXTENSION }}
+            METABASE_URL:${{ env.PROJECT_ID }}/METABASE_URL_${{ env.SECRETS_EXTENSION }}
+            METABASE_SECRET_KEY:${{ env.PROJECT_ID }}/METABASE_SECRET_KEY_${{ env.SECRETS_EXTENSION }}
+            GOOGLE_AUTHENTICATION:${{ env.PROJECT_ID }}/GOOGLE_AUTHENTICATION_PROD
+            DB_USERNAME:${{ env.PROJECT_ID }}/DB_USERNAME_${{ env.SECRETS_EXTENSION }}
+            DB_DATABASE_NAME:${{ env.PROJECT_ID }}/DB_DATABASE_NAME_${{ env.SECRETS_EXTENSION }}
+            APP_SECRET:${{ env.PROJECT_ID }}/APP_SECRET_${{ env.SECRETS_EXTENSION }}
+            DEMO_PWD:${{ env.PROJECT_ID }}/DEMO_PWD_${{ env.SECRETS_EXTENSION }}
+            QUONTO_LOGIN:${{ env.PROJECT_ID }}/QUONTO_LOGIN_${{ env.SECRETS_EXTENSION }}
+            QUONTO_SECRET:${{ env.PROJECT_ID }}/QUONTO_SECRET_${{ env.SECRETS_EXTENSION }}
+            QUONTO_URL:${{ env.PROJECT_ID }}/QUONTO_URL_${{ env.SECRETS_EXTENSION }}
+            ACCOUNTING_CONTACT_EMAIL:${{ env.PROJECT_ID }}/ACCOUNTING_CONTACT_EMAIL_${{ env.SECRETS_EXTENSION }}
+            ADMIN_CONTACT_EMAIL:${{ env.PROJECT_ID }}/ADMIN_CONTACT_EMAIL_${{ env.SECRETS_EXTENSION }}
+            DASHBOARD_ACCESS_CONTACT_EMAIL:${{ env.PROJECT_ID }}/DASHBOARD_ACCESS_CONTACT_EMAIL_${{ env.SECRETS_EXTENSION }}
+            TRUSTPILOT_TRIGGER_CONTACT_EMAIL:${{ env.PROJECT_ID }}/TRUSTPILOT_TRIGGER_CONTACT_EMAIL_${{ env.SECRETS_EXTENSION }}
+            ERROR_LOG_CONTACT_EMAIL:${{ env.PROJECT_ID }}/ERROR_LOG_CONTACT_EMAIL_${{ env.SECRETS_EXTENSION }}
+            PARTENAIRE_CONTACT_EMAIL:${{ env.PROJECT_ID }}/PARTENAIRE_CONTACT_EMAIL_${{ env.SECRETS_EXTENSION }}
+            DASHBOARD_URL:${{ env.PROJECT_ID }}/DASHBOARD_URL_${{ env.SECRETS_EXTENSION }}
+            APP_URL:${{ env.PROJECT_ID }}/APP_URL_${{ env.SECRETS_EXTENSION }}
+            PAYFIT_CLIENT_ID:${{ env.PROJECT_ID }}/PAYFIT_CLIENT_ID_PROD
+            PAYFIT_CLIENT_SECRET:${{ env.PROJECT_ID }}/PAYFIT_CLIENT_SECRET_PROD
+            PAYFIT_REDIRECT_URI:${{ env.PROJECT_ID }}/PAYFIT_REDIRECT_URI_${{ env.SECRETS_EXTENSION }}
+            PAYFIT_WEBHOOK_SECRET:${{ env.PROJECT_ID }}/PAYFIT_WEBHOOK_SECRET_${{ env.SECRETS_EXTENSION }}
+            HIPAY_SECURE_URL:${{ env.PROJECT_ID }}/HIPAY_SECURE_URL_PROD_PROD
+            HIPAY_SECURE_VAULT_URL:${{ env.PROJECT_ID }}/HIPAY_SECURE_VAULT_URL_PROD_PROD
+            SENTRY_DNS:${{ env.PROJECT_ID }}/SENTRY_DNS_PROD
+            GOOGLE_AUTHENTICATION_APP:${{ env.PROJECT_ID }}/GOOGLE_AUTHENTICATION_APP
+            BASIC_AUTH_USERNAME:${{ env.PROJECT_ID }}/BASIC_AUTH_USERNAME_${{ env.SECRETS_EXTENSION }}
+            BASIC_AUTH_PASSWORD:${{ env.PROJECT_ID }}/BASIC_AUTH_PASSWORD_${{ env.SECRETS_EXTENSION }}
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          # SENTRY_URL: https://sentry.io/
+        with:
+          environment: production
+          ignore_missing: true
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --production=false
+
+      - name: Build
+        run: yarn build
+
+      - name: Init Clean Schema
+        run: yarn typeorm:test schema:drop
+
+      - name: Run Migrations
+        run: yarn typeorm:test migration:run
+
+      - name: Run Tests
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          GOOGLE_AUTHENTICATION: ${{ env.GOOGLE_CREDENTIALS }}
+          GOOGLE_AUTHENTICATION_APP: ${{ env.GOOGLE_CREDENTIALS }}
+        run: yarn test
+
+      - name: Copy Build Files
+        run: |
+          rm -rf $BUILD_DIR 
+          ./scripts/copy_build_files.sh $BUILD_DIR
+
+      - name: Upload build for push-build job
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: ${{ env.BUILD_DIR }}

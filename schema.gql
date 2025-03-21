@@ -1,0 +1,2138 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AdvantageResponse {
+  form: advantage_form_enum!
+  value: Float
+}
+
+enum advantage_form_enum {
+  CASHBACK
+  PROMO_CODE
+}
+
+type PointOfSaleResponse {
+  id: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  createdAt: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  updatedAt: String!
+  name: String!
+  mcc: String
+  categoryName: String @deprecated(reason: "Use filterName instead")
+  filterName: String
+  attribute: String
+  advantage: AdvantageResponse
+  pointOfSaleType: point_of_sale_type_enum
+  description: String
+  phone: String
+  city: String
+  postalCode: String
+  street: String
+  email: String
+  website: String
+  tags: [point_of_sale_grade_type_enum!]!
+  imageLinks: [String!]!
+  distance: Float
+  labelName: String
+  labelLink: String
+  reviewLink: String
+  latitude: Float
+  longitude: Float
+}
+
+enum point_of_sale_type_enum {
+  PHYSICAL
+  DELIVERY
+}
+
+enum point_of_sale_grade_type_enum {
+  BIO
+  LOCAL
+  VEGETARIAN
+  ANTIWASTE
+  NOWASTE
+  INCLUSIVE
+}
+
+type PointOfSalesResponse {
+  count: Int!
+  before: String
+  after: String
+  data: [PointOfSaleResponse!]
+}
+
+type TransactionResponse {
+  id: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  createdAt: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  updatedAt: String!
+  merchantName: String!
+  iconUrl: String!
+  amount: Float!
+  status: transaction_status_enum!
+  paymentDate: DateTime!
+  declinedReason: transaction_declined_reason_enum
+}
+
+enum transaction_status_enum {
+  Accepted
+  Refunded
+  Settled
+  Cleared
+  Declined
+  Reversed
+}
+
+enum transaction_declined_reason_enum {
+  INSUFFICIENT_FUNDS
+  LIMIT_REACHED
+  NOT_AVAILABLE_ON_SUNDAYS
+  MERCHANT_INVALID
+  COUNTRY_INVALID
+  CARD_LOCKED
+  CVV_INCORRECT
+  EXP_DATE_INCORRECT
+  PIN_INCORRECT
+  PIN_REQUIRED
+  PIN_TRY_EXCEEDED
+}
+
+type TransactionsByMonth {
+  month: DateTime!
+  items: [TransactionResponse!]
+}
+
+type TransactionsResponse {
+  count: Int!
+  before: String
+  after: String
+  data: [TransactionResponse!]
+  itemsByMonth: [TransactionsByMonth!]
+}
+
+type ErrorTraduction {
+  title: String!
+  message: String!
+}
+
+type UnknownGraphqlError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+interface BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type EmbeddedDashboardUrlResponse {
+  result: String
+  error: EmbeddedDashboardUrlErrorUnion
+}
+
+union EmbeddedDashboardUrlErrorUnion = DataVisualizerError | UnknownGraphqlError
+
+type DataVisualizerError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type ApiAdresseResponse {
+  label: String
+  street: String
+  postalCode: String
+  country: String
+  city: String
+  latitude: Float
+  longitude: Float
+}
+
+type FindPlaceResponse {
+  result: [ApiAdresseResponse!]
+  error: FindPlaceErrorUnion
+}
+
+union FindPlaceErrorUnion = PlaceNotFoundError | UnknownGraphqlError
+
+type PlaceNotFoundError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type ActivatePhysicalCardResponse {
+  result: Boolean
+  error: ActivatePhysicalCardErrorUnion
+}
+
+union ActivatePhysicalCardErrorUnion = CardNotUnlockedError | CardAlreadyActivatedError | NotFoundException | UnknownGraphqlError
+
+type CardNotUnlockedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CardAlreadyActivatedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type NotFoundException implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type BlockDestroyedCardResponse {
+  result: lock_status_enum
+  error: BlockDestroyedCardErrorUnion
+}
+
+enum lock_status_enum {
+  UNLOCK
+  LOCK
+  LOST
+  STOLEN
+  DESTROYED
+}
+
+union BlockDestroyedCardErrorUnion = CardAlreadyBlockedError | UnknownGraphqlError
+
+type CardAlreadyBlockedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type BlockLostCardResponse {
+  result: lock_status_enum
+  error: BlockLostCardErrorUnion
+}
+
+union BlockLostCardErrorUnion = CardAlreadyBlockedError | UnknownGraphqlError
+
+type BlockStolenCardResponse {
+  result: lock_status_enum
+  error: BlockStolenCardErrorUnion
+}
+
+union BlockStolenCardErrorUnion = CardAlreadyBlockedError | UnknownGraphqlError
+
+type ChangePinResponse {
+  result: Boolean
+  error: ChangePinErrorUnion
+}
+
+union ChangePinErrorUnion = CardPinAlreadySetError | CardPinFormatNotCorrectError | WrongPinError | UnknownGraphqlError
+
+type CardPinAlreadySetError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CardPinFormatNotCorrectError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type WrongPinError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CreateVirtualCardAdminResponse {
+  result: String
+  error: CreateVirtualCardAdminErrorUnion
+}
+
+union CreateVirtualCardAdminErrorUnion = CardAlreadyExistsError | UserOrWalletNotFoundOrNotActiveError | UnknownGraphqlError
+
+type CardAlreadyExistsError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type UserOrWalletNotFoundOrNotActiveError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CreateVirtualCardResponse {
+  result: String
+  error: CreateVirtualCardErrorUnion
+}
+
+union CreateVirtualCardErrorUnion = CardAlreadyExistsError | UserOrWalletNotFoundOrNotActiveError | EmployeeHasNotAcceptedCguError | UnknownGraphqlError
+
+type EmployeeHasNotAcceptedCguError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type InitiateCardDigitalizationResponse {
+  result: String
+  error: InitiateCardDigitalizationErrorUnion
+}
+
+union InitiateCardDigitalizationErrorUnion = CardNotFoundError | CardDigitalizationAlreadyInitiatedError | TokenRequestorNeedsCertificatesError | UnknownGraphqlError
+
+type CardNotFoundError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CardDigitalizationAlreadyInitiatedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type TokenRequestorNeedsCertificatesError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type LockCardResponse {
+  result: lock_status_enum
+  error: LockCardErrorUnion
+}
+
+union LockCardErrorUnion = CardAlreadyLockedError | UnknownGraphqlError
+
+type CardAlreadyLockedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type RequestPhysicalCardAdminResponseError {
+  result: Boolean
+  error: RequestPhysicalCardAdminErrorUnion
+}
+
+union RequestPhysicalCardAdminErrorUnion = CardPinAlreadySetError | CardPinFormatNotCorrectError | CardNotUnlockedError | CardAlreadyConvertedError | CardPinNotSetError | NotFoundException | UnknownGraphqlError
+
+type CardAlreadyConvertedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CardPinNotSetError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CardResponse {
+  id: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  createdAt: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  updatedAt: String!
+  lockStatus: lock_status_enum!
+  activatedAt: DateTime
+  isConvertedToPhysical: Boolean!
+  isPinSet: Boolean!
+  maskedPan: String
+  embossedName: String
+  isPinLocked: Boolean
+  physicalCardPrice: Float
+  pinTryExceeded: Boolean!
+}
+
+type RequestPhysicalCardResponse {
+  """
+  Do we need a paymet for this conversion. url should be null if needPayment is false
+  """
+  needPayment: Boolean!
+  url: String
+}
+
+type RequestPhysicalCardResponseError {
+  result: RequestPhysicalCardResponse
+  error: RequestPhysicalCardErrorUnion
+}
+
+union RequestPhysicalCardErrorUnion = CardPinAlreadySetError | CardPinFormatNotCorrectError | CardNotUnlockedError | CardAlreadyConvertedError | CardPinNotSetError | NotFoundException | UnknownGraphqlError
+
+type ResetPinResponse {
+  result: Boolean
+  error: ResetPinErrorUnion
+}
+
+union ResetPinErrorUnion = CardPinNotSetError | CardPinFormatNotCorrectError | UnknownGraphqlError
+
+type UnlockCardResponse {
+  result: lock_status_enum
+  error: UnlockCardErrorUnion
+}
+
+union UnlockCardErrorUnion = CardAlreadyUnlockedError | UnknownGraphqlError
+
+type CardAlreadyUnlockedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type UnlockPinResponse {
+  result: Boolean
+  error: UnlockPinErrorUnion
+}
+
+union UnlockPinErrorUnion = UnknownGraphqlError
+
+type UpdateCardLimitAdminResponse {
+  result: Int
+  error: UpdateCardLimitAdminErrorUnion
+}
+
+union UpdateCardLimitAdminErrorUnion = UnknownGraphqlError
+
+type UpdateCardOptionsAdminResponse {
+  result: Int
+  error: UpdateCardOptionsAdminErrorUnion
+}
+
+union UpdateCardOptionsAdminErrorUnion = UnknownGraphqlError
+
+type DisplayCardResponse {
+  result: String
+  error: DisplayCardErrorUnion
+}
+
+union DisplayCardErrorUnion = CardNotUnlockedError | WrongEmployeeCodeError | EmployeeCodeTooManyFailedAttemptError | EmployeeFrozenError | CardNotFoundError | UnknownGraphqlError
+
+type WrongEmployeeCodeError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type EmployeeCodeTooManyFailedAttemptError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type EmployeeFrozenError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type FindCardResponse {
+  result: CardResponse
+  error: FindCardErrorUnion
+}
+
+union FindCardErrorUnion = CardNotFoundError | UnknownGraphqlError
+
+type CreateTransactionDevResponseError {
+  result: Int
+  error: CreateTransactionDevErrorUnion
+}
+
+union CreateTransactionDevErrorUnion = UnknownGraphqlError
+
+type DistributeCashbackAdminResponse {
+  result: Float
+  error: distributeCashbackAdminErrorUnion
+}
+
+union distributeCashbackAdminErrorUnion = UnknownGraphqlError
+
+type FetchExternalTransactionResponse {
+  result: Float
+  error: FetchExternalTransactionErrorUnion
+}
+
+union FetchExternalTransactionErrorUnion = UnknownGraphqlError
+
+type FindTransactionsResponse {
+  result: TransactionsResponse
+  error: FindTransactionsErrorUnion
+}
+
+union FindTransactionsErrorUnion = UnknownGraphqlError
+
+type AcceptNotificationResponse {
+  result: Boolean
+  error: AcceptNotificationErrorUnion
+}
+
+union AcceptNotificationErrorUnion = UnknownGraphqlError
+
+type PushReceiverDeviceTokenResponse {
+  result: String
+  error: PushReceiverDeviceTokenErrorUnion
+}
+
+union PushReceiverDeviceTokenErrorUnion = UnknownGraphqlError
+
+type FindPointOfSalesResponse {
+  result: PointOfSalesResponse
+  error: FindPointOfSalesErrorUnion
+}
+
+union FindPointOfSalesErrorUnion = PlaceNotFoundError | UnknownGraphqlError
+
+type InsertMerchantWithSiretResponse {
+  result: Int
+  error: InsertMerchantWithSiretErrorUnion
+}
+
+union InsertMerchantWithSiretErrorUnion = NotFoundException | UnknownGraphqlError
+
+type UpsertMerchantResponse {
+  result: String
+  error: UpsertMerchantErrorUnion
+}
+
+union UpsertMerchantErrorUnion = MccNotFoundError | UnknownGraphqlError
+
+type MccNotFoundError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type FindPointOfSaleResponse {
+  result: PointOfSaleResponse
+  error: FindPointOfSaleErrorUnion
+}
+
+union FindPointOfSaleErrorUnion = PlaceNotFoundError | UnknownGraphqlError
+
+type PointOfSaleFilterResponse {
+  name: String
+  code: String
+}
+
+type PointOfSaleFiltersResponse {
+  result: [PointOfSaleFilterResponse!]
+  error: PointOfSaleFiltersErrorUnion
+}
+
+union PointOfSaleFiltersErrorUnion = UnknownGraphqlError
+
+type CancelCardAcquisitionResponse {
+  result: Boolean
+  error: CancelCardAcquisitionErrorUnion
+}
+
+union CancelCardAcquisitionErrorUnion = UnknownGraphqlError
+
+type CaptureUncapturedTransactionResponse {
+  result: Float
+  error: CaptureUncapturedTransactionErrorUnion
+}
+
+union CaptureUncapturedTransactionErrorUnion = UnknownGraphqlError
+
+type CreateBaasAcquisitionsResponse {
+  result: Float
+  error: CreateBaasAcquisitionsErrorUnion
+}
+
+union CreateBaasAcquisitionsErrorUnion = UnknownGraphqlError
+
+type CreditWalletDevResponse {
+  result: Float
+  error: CreditWalletDevErrorUnion
+}
+
+union CreditWalletDevErrorUnion = UnknownGraphqlError
+
+type CardAcquisitionResponse {
+  amount: Float
+  maskedPan: String!
+  status: String!
+}
+
+type RequestCardAcquisitionLinkResponse {
+  url: String!
+  orderId: String!
+}
+
+type RequestExternalCardAcquisitionLinkResponse {
+  result: RequestCardAcquisitionLinkResponse
+  error: RequestExternalCardAcquisitionLinkErrorUnion
+}
+
+union RequestExternalCardAcquisitionLinkErrorUnion = WalletAlreadyExistsError | CardAcquisitionServiceError | CardAcquisitionNoAuthorizedOverdraftError | UnknownGraphqlError
+
+type WalletAlreadyExistsError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CardAcquisitionServiceError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type CardAcquisitionNoAuthorizedOverdraftError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type UpdateCardAcquisitionOverdraftResponse {
+  result: Float
+  error: UpdateCardAcquisitionOverdraftErrorUnion
+}
+
+union UpdateCardAcquisitionOverdraftErrorUnion = UnknownGraphqlError
+
+type ValidateCardAcquisitionAdminResponse {
+  result: Boolean
+  error: ValidateCardAcquisitionAdminErrorUnion
+}
+
+union ValidateCardAcquisitionAdminErrorUnion = WalletAlreadyExistsError | CardAcquisitionServiceError | CardAcquisitionNoAuthorizedOverdraftError | UnknownGraphqlError
+
+type ValidateCardAcquisitionResponse {
+  result: Boolean
+  error: ValidateCardAcquisitionErrorUnion
+}
+
+union ValidateCardAcquisitionErrorUnion = WalletAlreadyExistsError | CardAcquisitionServiceError | CardAcquisitionNoAuthorizedOverdraftError | UnknownGraphqlError
+
+type CashbackSumResponse {
+  result: Float
+  error: CashbackSumErrorUnion
+}
+
+union CashbackSumErrorUnion = UnknownGraphqlError
+
+type FindCardAcquisitionResponse {
+  result: CardAcquisitionResponse
+  error: FindCardAcquisitionErrorUnion
+}
+
+union FindCardAcquisitionErrorUnion = UnknownGraphqlError
+
+type SubWalletResponse {
+  id: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  createdAt: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  updatedAt: String!
+  balance: Float!
+  authorizedBalance: Float!
+  advantage: advantageTypeEnumName!
+  DAILY: Float
+  MONTHLY: Float
+  YEARLY: Float
+}
+
+enum advantageTypeEnumName {
+  MEALTICKET
+  CULTURALCHEQUE
+  MOBILITYFORFAIT
+  GIFTCARD
+  NONE
+  EXTERNAL
+}
+
+type WalletResponse {
+  totalBalance: Float!
+  totalDAILY: Float!
+  totalMONTHLY: Float!
+  totalYEARLY: Float!
+  subWallets: [SubWalletResponse!]!
+}
+
+type FindWalletResponse {
+  result: WalletResponse
+  error: FindWalletErrorUnion
+}
+
+union FindWalletErrorUnion = UnknownGraphqlError
+
+type AcceptCguResponse {
+  result: Boolean
+  error: AcceptCguErrorUnion
+}
+
+union AcceptCguErrorUnion = EmployeeAlreadyAcceptedCguError | EmployeeFrozenError | UnknownGraphqlError
+
+type EmployeeAlreadyAcceptedCguError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type AcceptOrganizationOfferResponse {
+  result: Boolean
+  error: AcceptOrganizationOfferErrorUnion
+}
+
+union AcceptOrganizationOfferErrorUnion = OrganizationAlreadyAcceptedOfferError | UnknownGraphqlError
+
+type OrganizationAlreadyAcceptedOfferError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type AddOrganizationAdminAdminResponse {
+  result: String
+  error: AddOrganizationAdminAdminErrorUnion
+}
+
+union AddOrganizationAdminAdminErrorUnion = OrganizationAdminAlreadyExistsError | UnknownGraphqlError
+
+type OrganizationAdminAlreadyExistsError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type AddOrganizationAdminResponse {
+  result: String
+  error: AddOrganizationAdminErrorUnion
+}
+
+union AddOrganizationAdminErrorUnion = OrganizationAdminAlreadyExistsError | UnknownGraphqlError
+
+type AskEmployeeDeviceValidationTokenResponse {
+  result: String
+  error: AskEmployeeDeviceValidationTokenErrorUnion
+}
+
+union AskEmployeeDeviceValidationTokenErrorUnion = UnknownGraphqlError
+
+type AskNewEmployeeLoginTokenResponse {
+  result: Boolean
+  error: AskNewEmployeeLoginTokenErrorUnion
+}
+
+union AskNewEmployeeLoginTokenErrorUnion = EmployeeAlreadyActivatedError | EmployeeFrozenError | UnknownGraphqlError
+
+type EmployeeAlreadyActivatedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type AskNewEmployeeSmsTokenResponse {
+  result: String
+  error: AskNewEmployeeSmsTokenErrorUnion
+}
+
+union AskNewEmployeeSmsTokenErrorUnion = EmployeeAlreadyActivatedError | EmployeeFrozenError | EmployeeNotFoundError | UnknownGraphqlError
+
+type EmployeeNotFoundError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type AskNewOrganizationAdminLoginTokenResponse {
+  result: Boolean
+  error: AskNewOrganizationAdminLoginTokenErrorUnion
+}
+
+union AskNewOrganizationAdminLoginTokenErrorUnion = OrganizationAdminAlreadyActivatedError | UnknownGraphqlError
+
+type OrganizationAdminAlreadyActivatedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type AskResetEmployeeCodeResponse {
+  result: Boolean
+  error: AskResetEmployeeCodeErrorUnion
+}
+
+union AskResetEmployeeCodeErrorUnion = EmployeeNotActivatedError | EmployeeFrozenError | EmployeeEmailNotFound | UnknownGraphqlError
+
+type EmployeeNotActivatedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type EmployeeEmailNotFound implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type AskResetOrganizationAdminPasswordResponse {
+  result: Boolean
+  error: AskResetOrganizationAdminPasswordErrorUnion
+}
+
+union AskResetOrganizationAdminPasswordErrorUnion = OrganizationAdminNotActivatedError | OrganizationAdminEmailNotFound | UnknownGraphqlError
+
+type OrganizationAdminNotActivatedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type OrganizationAdminEmailNotFound implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type MealTicketDays {
+  """Does the employee get a meal ticket on mondays"""
+  MONDAY: Boolean!
+
+  """Does the employee get a meal ticket on tuesdays"""
+  TUESDAY: Boolean!
+
+  """Does the employee get a meal ticket on wednesdays"""
+  WEDNESDAY: Boolean!
+
+  """Does the employee get a meal ticket on thursdays"""
+  THURSDAY: Boolean!
+
+  """Does the employee get a meal ticket on fridays"""
+  FRIDAY: Boolean!
+
+  """Does the employee get a meal ticket on saturdays"""
+  SATURDAY: Boolean!
+
+  """Does the employee get a meal ticket on sundays"""
+  SUNDAY: Boolean!
+}
+
+type CreateEmployeeResponse {
+  result: String
+  error: CreateEmployeeErrorUnion
+  email: String!
+}
+
+union CreateEmployeeErrorUnion = EmployeeAlreadyExistsError | EmployeeEmailDuplicatedError | EmployeeNameNotValideError | EmailNotValideError | UnknownGraphqlError
+
+type EmployeeAlreadyExistsError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type EmployeeEmailDuplicatedError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type EmployeeNameNotValideError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type EmailNotValideError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type OrganizationPayrollIntegrationResponseProps {
+  provider: String!
+  active: Boolean!
+  oAuthUrl: String!
+}
+
+type OfferResponse {
+  commission: Float!
+  commissionType: commission_type_enum!
+  advantageInShops: Float!
+  physicalCardPrice: Float!
+  firstPhysicalCardPrice: Float!
+}
+
+enum commission_type_enum {
+  PERCENT
+  PER_EMPLOYEE_PER_MONTH
+}
+
+type MealTicketConfigResponse {
+  coveragePercent: Float
+  mealTicketAmount: Float
+  mealTicketDay: Int
+  mealTicketAutoRenew: Boolean
+  physicalCardCoverage: Float
+  firstPhysicalCardCoverage: Float
+}
+
+type OrganizationInfoResponse {
+  id: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  createdAt: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  updatedAt: String!
+  status: organization_status_enum!
+  offer: OfferResponse!
+  mealTicketConfig: MealTicketConfigResponse
+  name: String!
+  city: String
+  postalCode: String
+  street: String
+  siret: String
+  iban: String
+}
+
+enum organization_status_enum {
+  ORGANIZATION_ACTIVE
+  ORGANIZATION_NO_ADDRESS_OR_SIRET
+  ORGANIZATION_OFFER_NOT_ACCEPTED
+}
+
+type FindAccessibleOrganizationsResponse {
+  data: [OrganizationInfoResponse!]!
+}
+
+type CreateNewOrganizationAdminResponseError {
+  result: OrganizationInfoResponse
+  error: CreateNewOrganizationAdminErrorUnion
+}
+
+union CreateNewOrganizationAdminErrorUnion = UnknownGraphqlError
+
+type CreateOrganizationAdminDevResponse {
+  result: String
+  error: CreateOrganizationAdminDevErrorUnion
+}
+
+union CreateOrganizationAdminDevErrorUnion = OrganizationAdminAlreadyExistsError | UnknownGraphqlError
+
+type FreezeEmployeeResponse {
+  result: Boolean
+  error: FreezeEmployeeErrorUnion
+}
+
+union FreezeEmployeeErrorUnion = EmployeeAlreadyFrozenError | UnknownGraphqlError
+
+type EmployeeAlreadyFrozenError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type LoginResponse {
+  jwtToken: String!
+  refreshToken: String!
+}
+
+type LoginEmployeeNewDeviceIdResponse {
+  result: LoginResponse
+  error: LoginEmployeeNewDeviceIdErrorUnion
+}
+
+union LoginEmployeeNewDeviceIdErrorUnion = TokenExpiredError | WrongSmsCodeError | UnknownGraphqlError
+
+type TokenExpiredError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type WrongSmsCodeError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type LoginEmployeeResponse {
+  result: LoginResponse
+  error: LoginEmployeeErrorUnion
+}
+
+union LoginEmployeeErrorUnion = EmployeeNotActivatedError | EmployeeNewDeviceNotValidated | WrongEmployeeCodeError | EmployeeFrozenError | EmployeeNotFoundError | UnknownGraphqlError
+
+type EmployeeNewDeviceNotValidated implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type LoginOrganizationAdminResponse {
+  result: LoginResponse
+  error: LoginOrganizationAdminErrorUnion
+}
+
+union LoginOrganizationAdminErrorUnion = OrganizationAdminNotActivatedError | WrongOrganizationAdminPasswordError | OrganizationAdminNotFoundError | UnknownGraphqlError
+
+type WrongOrganizationAdminPasswordError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type OrganizationAdminNotFoundError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type LogoutEmployeeResponse {
+  result: Boolean
+  error: LogoutEmployeeErrorUnion
+}
+
+union LogoutEmployeeErrorUnion = EmployeeNotActivatedError | EmployeeFrozenError | EmployeeNotFoundError | UnknownGraphqlError
+
+type FindEmployeeResponse {
+  id: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  createdAt: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  updatedAt: String!
+  userId: String!
+  firstname: String!
+  lastname: String!
+  email: String!
+  city: String
+  postalCode: String
+  street: String
+  birthday: Date!
+
+  """which days employee is supposed to get a meal ticket"""
+  mealTicketDays: MealTicketDays!
+  coveragePercent: Float
+  mealTicketAmount: Float
+  status: employee_status_enum!
+}
+
+"""Date without time custom scalar type"""
+scalar Date
+
+enum employee_status_enum {
+  EMPLOYEE_ACTIVE_MEAL_TICKET
+  EMPLOYEE_ACTIVE
+  EMPLOYEE_NO_CARD_ACQUISITION
+  EMPLOYEE_UNACTIVE
+  EMPLOYEE_NO_CGU
+  EMPLOYEE_ACTIVE_RESET_CODE
+  EMPLOYEE_ACTIVE_NEW_DEVICE
+}
+
+type FindEmployeesResponse {
+  count: Int!
+  limit: Int
+  data: [FindEmployeeResponse!]!
+}
+
+type EmployeeDeviceValidationResponse {
+  phoneNumber: String
+  email: String
+}
+
+type RefreshEmployeeTokenResponse {
+  result: LoginResponse
+  error: RefreshEmployeeTokenErrorUnion
+}
+
+union RefreshEmployeeTokenErrorUnion = EmployeeRefreshTokenError | EmployeeNotActivatedError | EmployeeFrozenError | UnknownGraphqlError
+
+type EmployeeRefreshTokenError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type RefreshOrganizationAdminTokenResponse {
+  result: LoginResponse
+  error: RefreshOrganizationAdminTokenErrorUnion
+}
+
+union RefreshOrganizationAdminTokenErrorUnion = OrganizationAdminRefreshTokenError | OrganizationAdminNotActivatedError | UnknownGraphqlError
+
+type OrganizationAdminRefreshTokenError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type RegisterOrganizationAdminResponse {
+  result: LoginResponse
+  error: RegisterOrganizationAdminErrorUnion
+}
+
+union RegisterOrganizationAdminErrorUnion = UnknownGraphqlError
+
+type RemoveEmployeeResponse {
+  result: String
+  error: RemoveEmployeeErrorUnion
+}
+
+union RemoveEmployeeErrorUnion = UnknownGraphqlError
+
+type RemoveOrganizationAdminResponse {
+  result: String
+  error: RemoveOrganizationAdminErrorUnion
+}
+
+union RemoveOrganizationAdminErrorUnion = OrganizationAdminIsTheLastOneError | UnknownGraphqlError
+
+type OrganizationAdminIsTheLastOneError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type SetEmployeeAccountAdminResponse {
+  result: String
+  error: SetEmployeeAccountAdminErrorUnion
+}
+
+union SetEmployeeAccountAdminErrorUnion = EmployeeCodeFormatNotCorrectError | EmployeeAlreadyActivatedError | EmployeeAlreadyExistsError | EmployeeFrozenError | UnknownGraphqlError
+
+type EmployeeCodeFormatNotCorrectError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type SetEmployeeAccountResponse {
+  result: LoginResponse
+  error: SetEmployeeAccountErrorUnion
+}
+
+union SetEmployeeAccountErrorUnion = TokenExpiredError | MobileTokenNotSetError | EmployeeNewDeviceNotValidated | EmployeeCodeFormatNotCorrectError | EmployeeAlreadyActivatedError | EmployeeAlreadyExistsError | EmployeeFrozenError | UnknownGraphqlError
+
+type MobileTokenNotSetError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type SetEmployeeCodeResponse {
+  result: LoginResponse
+  error: SetEmployeeCodeErrorUnion
+}
+
+union SetEmployeeCodeErrorUnion = TokenExpiredError | EmployeeNewDeviceNotValidated | EmployeeCodeFormatNotCorrectError | EmployeeNotActivatedError | EmployeeFrozenError | UnknownGraphqlError
+
+type SetMealTicketConfigResponse {
+  result: String
+  error: SetMealTicketConfigErrorUnion
+}
+
+union SetMealTicketConfigErrorUnion = OrganizationMealTicketAmountIsIncorrectError | OrganizationCoveragePercentIsIncorrectError | OrganizationMealTicketDayIsIncorrectError | UnknownGraphqlError
+
+type OrganizationMealTicketAmountIsIncorrectError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type OrganizationCoveragePercentIsIncorrectError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type OrganizationMealTicketDayIsIncorrectError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type SetOrganizationAdminPasswordResponse {
+  result: LoginResponse
+  error: SetOrganizationAdminPasswordErrorUnion
+}
+
+union SetOrganizationAdminPasswordErrorUnion = OrganizationAdminPasswordFormatNotCorrectError | UnknownGraphqlError
+
+type OrganizationAdminPasswordFormatNotCorrectError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type UnfreezeEmployeeResponse {
+  result: Boolean
+  error: UnfreezeEmployeeErrorUnion
+}
+
+union UnfreezeEmployeeErrorUnion = EmployeeAlreadyUnfrozenError | UnknownGraphqlError
+
+type EmployeeAlreadyUnfrozenError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type UpdateEmployeeCodeResponse {
+  result: LoginResponse
+  error: UpdateEmployeeCodeErrorUnion
+}
+
+union UpdateEmployeeCodeErrorUnion = WrongEmployeeCodeError | EmployeeCodeTooManyFailedAttemptError | EmployeeCodeFormatNotCorrectError | EmployeeNotActivatedError | EmployeeFrozenError | UnknownGraphqlError
+
+type UpdateEmployeeResponse {
+  result: String
+  error: UpdateEmployeeErrorUnion
+}
+
+union UpdateEmployeeErrorUnion = EmployeeNotFoundError | UnknownGraphqlError
+
+type UpdateOrgnanizationAdminPasswordResponse {
+  result: String
+  error: UpdateOrgnanizationAdminPasswordErrorUnion
+}
+
+union UpdateOrgnanizationAdminPasswordErrorUnion = UnknownGraphqlError
+
+type UpdateOrganizationAdminResponse {
+  result: String
+  error: UpdateOrganizationAdminErrorUnion
+}
+
+union UpdateOrganizationAdminErrorUnion = OrganizationAdminNotFoundError | UnknownGraphqlError
+
+type EmployeeDeviceValidationInfoResponse {
+  result: EmployeeDeviceValidationResponse
+  error: EmployeeDeviceValidationInfoErrorUnion
+}
+
+union EmployeeDeviceValidationInfoErrorUnion = UnknownGraphqlError
+
+type EmployeeInfoResponse {
+  result: FindEmployeeResponse
+  error: EmployeeInfoErrorUnion
+}
+
+union EmployeeInfoErrorUnion = UnknownGraphqlError
+
+type EmployeeStatusResponse {
+  result: employee_status_enum
+  error: EmployeeStatusErrorUnion
+}
+
+union EmployeeStatusErrorUnion = EmployeeNotFoundError | UnknownGraphqlError
+
+type FindAccessibleOrganizationsResponseError {
+  result: FindAccessibleOrganizationsResponse
+  error: AccessibleOrganizationsErrorUnion
+}
+
+union AccessibleOrganizationsErrorUnion = UnknownGraphqlError
+
+type FindEmployeeResponseError {
+  result: FindEmployeeResponse
+  error: FindEmployeeErrorUnion
+}
+
+union FindEmployeeErrorUnion = EmployeeNotFoundError | UnknownGraphqlError
+
+type FindEmployeesResponseError {
+  result: FindEmployeesResponse
+  error: FindEmployeesErrorUnion
+}
+
+union FindEmployeesErrorUnion = UnknownGraphqlError
+
+type FindOrganizationAdminResponse {
+  id: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  createdAt: String!
+
+  """020-11-24T17:43:15.970Z'"""
+  updatedAt: String!
+  userId: String!
+  firstname: String!
+  lastname: String!
+  email: String!
+}
+
+type FindOrganizationAdminsResponse {
+  count: Int!
+  limit: Int
+  data: [FindOrganizationAdminResponse!]!
+}
+
+type FindOrganizationAdminResponseError {
+  result: FindOrganizationAdminResponse
+  error: FindOrganizationAdminErrorUnion
+}
+
+union FindOrganizationAdminErrorUnion = UnknownGraphqlError
+
+type FindOrganizationAdminsResponseError {
+  result: FindOrganizationAdminsResponse
+  error: FindOrganizationAdminsErrorUnion
+}
+
+union FindOrganizationAdminsErrorUnion = UnknownGraphqlError
+
+type OrganizationMealTicketConfigResponseError {
+  result: MealTicketConfigResponse
+  error: MealTicketConfigErrorUnion
+}
+
+union MealTicketConfigErrorUnion = OrganizationHasNoSettingsError | UnknownGraphqlError
+
+type OrganizationHasNoSettingsError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+type OrganizationAdminStatusResponse {
+  result: organization_admin_status_enum
+  error: OrganizationAdminStatusErrorUnion
+}
+
+enum organization_admin_status_enum {
+  ORGANIZATION_ADMIN_ACTIVE
+  ORGANIZATION_ADMIN_UNACTIVE
+  ORGANIZATION_ADMIN_ACTIVE_RESET_CODE
+}
+
+union OrganizationAdminStatusErrorUnion = UnknownGraphqlError
+
+type OrganizationInfoResponseError {
+  result: OrganizationInfoResponse
+  error: OrganizationInfoResponseErrorUnion
+}
+
+union OrganizationInfoResponseErrorUnion = UnknownGraphqlError
+
+type OrganizationStatusByTokenResponse {
+  result: organization_status_enum
+  error: OrganizationStatusByTokenErrorUnion
+}
+
+union OrganizationStatusByTokenErrorUnion = UnknownGraphqlError
+
+type OrganizationStatusResponse {
+  result: organization_status_enum
+  error: OrganizationStatusErrorUnion
+}
+
+union OrganizationStatusErrorUnion = UnknownGraphqlError
+
+type ValidateEmployeeMailTokenResponse {
+  result: Boolean
+  error: ValidateEmployeeMailTokenErrorUnion
+}
+
+union ValidateEmployeeMailTokenErrorUnion = TokenExpiredError | UnknownGraphqlError
+
+type ValidateEmployeeSmsTokenResponse {
+  result: String
+  error: ValidateEmployeeSmsTokenErrorUnion
+}
+
+union ValidateEmployeeSmsTokenErrorUnion = TokenExpiredError | WrongSmsCodeError | UnknownGraphqlError
+
+type ValidateOrganizationAdminMailTokenResponse {
+  result: Boolean
+  error: ValidateOrganizationAdminMailTokenErrorUnion
+}
+
+union ValidateOrganizationAdminMailTokenErrorUnion = TokenExpiredError | UnknownGraphqlError
+
+type ValidateOrganizationAdminResponse {
+  result: Boolean
+  error: ValidateOrganizationAdminErrorUnion
+}
+
+union ValidateOrganizationAdminErrorUnion = OrganizationAdminPasswordFormatNotCorrectError | UnknownGraphqlError
+
+type LoginSuperAdminResponse {
+  result: String
+  error: LoginSuperAdminErrorUnion
+}
+
+union LoginSuperAdminErrorUnion = WrongSuperAdminPasswordError | UnknownGraphqlError
+
+type WrongSuperAdminPasswordError implements BaseGraphqlError {
+  message: String!
+  code: String!
+  traduction: ErrorTraduction
+  child: [UnknownGraphqlError!]
+  metadata: String
+}
+
+input MealTicketDaysInput {
+  """Does the employee get a meal ticket on mondays"""
+  MONDAY: Boolean!
+
+  """Does the employee get a meal ticket on tuesdays"""
+  TUESDAY: Boolean!
+
+  """Does the employee get a meal ticket on wednesdays"""
+  WEDNESDAY: Boolean!
+
+  """Does the employee get a meal ticket on thursdays"""
+  THURSDAY: Boolean!
+
+  """Does the employee get a meal ticket on fridays"""
+  FRIDAY: Boolean!
+
+  """Does the employee get a meal ticket on saturdays"""
+  SATURDAY: Boolean!
+
+  """Does the employee get a meal ticket on sundays"""
+  SUNDAY: Boolean!
+}
+
+"""Date custom scalar type"""
+scalar DateTime
+
+type Query {
+  employeeDeviceValidationInfo(input: EmployeeDeviceValidationInfoRequest!): EmployeeDeviceValidationInfoResponse!
+  employeeInfo: EmployeeInfoResponse!
+  employeeStatus(email: String!, deviceId: String): EmployeeStatusResponse!
+  findEmployee(employeeId: String!): FindEmployeeResponseError!
+  findEmployees(pagination: OffsetPaginationBase!, input: FindEmployeesRequest): FindEmployeesResponseError!
+  findOrganizationAdmins(pagination: OffsetPaginationBase!): FindOrganizationAdminsResponseError!
+  findOrganizationAdmin(organizationAdminId: String!): FindOrganizationAdminResponseError!
+  findAccessibleOrganizations: FindAccessibleOrganizationsResponseError!
+  mealTicketConfig: OrganizationMealTicketConfigResponseError!
+  organizationAdminStatus(email: String!): OrganizationAdminStatusResponse!
+  organizationInfo: OrganizationInfoResponseError!
+  organizationStatus: OrganizationStatusResponse!
+  organizationStatusByToken(token: String!): OrganizationStatusByTokenResponse!
+  validateEmployeeMailToken(input: ValidateEmployeeMailTokenRequest!): ValidateEmployeeMailTokenResponse!
+  validateEmployeeSmsToken(input: ValidateEmployeeSmsTokenRequest!): ValidateEmployeeSmsTokenResponse!
+  validateOrganizationAdminMailToken(input: ValidateOrganizationAdminMailTokenRequest!): ValidateOrganizationAdminMailTokenResponse!
+  validateOrganizationAdminPassword(input: ValidateOrganizationAdminPasswordRequest!): ValidateOrganizationAdminResponse!
+  findTransactions(input: FindTransactionsRequest!): FindTransactionsResponse!
+
+  """return card images as base64"""
+  displayCard(
+    newVersion: Boolean = false
+
+    """If you want card with PAN and CVV, provide the employeeCode"""
+    employeeCode: String
+  ): DisplayCardResponse!
+  findCard: FindCardResponse!
+  cashbackSum: CashbackSumResponse!
+  findCardAcquisition: FindCardAcquisitionResponse!
+  findWallet: FindWalletResponse!
+  findPointOfSale(input: FindPointOfSaleRequest!): FindPointOfSaleResponse!
+  findPointOfSales(input: FindPointOfSalesRequest!): FindPointOfSalesResponse!
+  pointOfSaleFilters(input: PointOfSaleFiltersRequest!): PointOfSaleFiltersResponse!
+  findPlace(input: String!): FindPlaceResponse!
+  findCoordsAddress(latitude: Float!, longitude: Float!): FindPlaceResponse!
+  embeddedDashboardUrlOrganization(dashboard: String!): EmbeddedDashboardUrlResponse!
+}
+
+input EmployeeDeviceValidationInfoRequest {
+  email: String!
+}
+
+input OffsetPaginationBase {
+  """How many transaction you want to get. Default 20, max 500"""
+  limit: Int = 20
+
+  """How many transaction you want to skip. Default 0"""
+  offset: Int = 0
+}
+
+input FindEmployeesRequest {
+  searchTerms: [String!]
+}
+
+input ValidateEmployeeMailTokenRequest {
+  email: String!
+
+  """token that has been  received by mail"""
+  token: String!
+}
+
+input ValidateEmployeeSmsTokenRequest {
+  """Token received as an answer from askEmployeeSmsToken"""
+  mobileToken: String!
+
+  """Code received by sms"""
+  mobileCode: String!
+}
+
+input ValidateOrganizationAdminMailTokenRequest {
+  email: String!
+
+  """token that has been  received by mail"""
+  token: String!
+}
+
+input ValidateOrganizationAdminPasswordRequest {
+  email: String!
+
+  """token that has been sent at user creation by email"""
+  token: String!
+
+  """password, choosen by the user to login"""
+  password: String!
+}
+
+input FindTransactionsRequest {
+  pagination: CursorPaginationBase!
+  startDate: DateTime
+  status: transaction_status_enum
+}
+
+input CursorPaginationBase {
+  """How many transaction you want to get. Default 20, max 500"""
+  limit: Int = 20
+  cursor: String
+}
+
+input FindPointOfSaleRequest {
+  pointOfSaleId: ID!
+}
+
+input FindPointOfSalesRequest {
+  pagination: CursorPaginationBase!
+
+  """
+  address from which to calculate the distance, by default it will be the organization address
+  """
+  address: String
+  latitude: Float
+  longitude: Float
+  advantageForm: [advantage_form_enum!] = [CASHBACK]
+  pointOfSaleType: [point_of_sale_type_enum!] = [DELIVERY, PHYSICAL]
+
+  """Radius in km from the address point"""
+  radius: Float
+}
+
+input PointOfSaleFiltersRequest {
+  advantage: advantageTypeEnumName
+}
+
+type Mutation {
+  acceptCgu: AcceptCguResponse!
+  acceptOrganizationOffer: AcceptOrganizationOfferResponse! @deprecated(reason: "Use registerOrganizationAdmin instead")
+  addOrganizationAdminAdmin(input: AddOrganizationAdminAdminRequest!): AddOrganizationAdminAdminResponse!
+  addOrganizationAdmin(input: AddOrganizationAdminRequest!): AddOrganizationAdminResponse!
+  askEmployeeDeviceValidationToken(input: AskEmployeeDeviceValidationTokenRequest!): AskEmployeeDeviceValidationTokenResponse!
+  askNewEmployeeLoginToken(email: String!): AskNewEmployeeLoginTokenResponse!
+  askNewEmployeeSmsToken(input: AskNewEmployeeSmsTokenRequest!): AskNewEmployeeSmsTokenResponse!
+  askNewOrganizationAdminLoginToken(email: String!): AskNewOrganizationAdminLoginTokenResponse!
+  askResetEmployeeCode(email: String!): AskResetEmployeeCodeResponse!
+  askResetOrganizationAdminPassword(email: String!): AskResetOrganizationAdminPasswordResponse!
+  createEmployee(input: [CreateEmployeeRequest!]!): [CreateEmployeeResponse!]!
+
+  """create an organization admin. Return email token (Dev only)"""
+  createOrganizationAdminDev(input: CreateOrganizationAdminDevRequest!): CreateOrganizationAdminDevResponse!
+  freezeEmployee(employeeId: String!): FreezeEmployeeResponse!
+  loginEmployee(input: LoginEmployeeRequest!): LoginEmployeeResponse!
+  loginEmployeeNewDeviceId(input: LoginEmployeeNewDeviceIdRequest!): LoginEmployeeNewDeviceIdResponse!
+  logoutEmployee(input: LogoutEmployeeRequest!): LogoutEmployeeResponse!
+  loginOrganizationAdmin(input: LoginOrganizationAdminRequest!): LoginOrganizationAdminResponse!
+  refreshEmployeeToken(input: RefreshTokenRequest!): RefreshEmployeeTokenResponse!
+  refreshOrganizationAdminToken(input: RefreshTokenRequest!): RefreshOrganizationAdminTokenResponse!
+  registerOrganizationAdmin(input: RegisterOrganizationAdminRequest!): RegisterOrganizationAdminResponse!
+  removeEmployee(employeeId: String!): RemoveEmployeeResponse!
+  removeOrganizationAdmin(organizationAdminId: String!): RemoveOrganizationAdminResponse!
+
+  """Set a code to login. Last step to employee activation process"""
+  setEmployeeAccountAdmin(input: SetEmployeeAccountAdminRequest!): SetEmployeeAccountAdminResponse!
+
+  """Set a code to login. Last step to employee activation process"""
+  setEmployeeAccount(input: SetEmployeeAccountRequest!): SetEmployeeAccountResponse!
+
+  """Set a code to reset it. Only available to already actived employee"""
+  setEmployeeCode(input: SetEmployeeCodeRequest!): SetEmployeeCodeResponse!
+  setMealTicketConfig(input: SetMealTicketConfigRequest!): SetMealTicketConfigResponse!
+
+  """
+  Set a password to login. Last step to organizationAdmin activation process
+  """
+  setOrganizationAdminPassword(input: SetOrganizationAdminPasswordRequest!): SetOrganizationAdminPasswordResponse!
+  unfreezeEmployee(employeeId: String!): UnfreezeEmployeeResponse!
+  updateEmployeeCode(input: UpdateEmployeeCodeRequest!): UpdateEmployeeCodeResponse!
+  updateEmployee(input: UpdateEmployeeRequest!): UpdateEmployeeResponse!
+  updateOrganizationAdmin(input: UpdateOrganizationAdminRequest!): UpdateOrganizationAdminResponse!
+  updateOrganizationAdminPassword(input: UpdateOrganizationAdminPasswordRequest!): UpdateOrgnanizationAdminPasswordResponse!
+  createNewOrganizationAdmin(input: CreateNewOrganizationAdminRequest!): CreateNewOrganizationAdminResponseError!
+  loginSuperAdmin(input: LoginSuperAdminRequest!): LoginSuperAdminResponse!
+  acceptNotification(input: AcceptNotificationRequest!): AcceptNotificationResponse!
+  pushDeviceToken(deviceToken: String!): PushReceiverDeviceTokenResponse!
+
+  """This mutation is only used in development"""
+  createTransactionDev(input: CreateTransactionDevRequest!): CreateTransactionDevResponseError!
+  distributeCashbackAdmin(input: DistributeCashbackAdminRequest!): DistributeCashbackAdminResponse!
+  fetchExternalTransaction(input: FetchExternalTransactionRequest!): FetchExternalTransactionResponse!
+  activatePhysicalCard: ActivatePhysicalCardResponse!
+  blockDestroyedCard: BlockDestroyedCardResponse!
+  blockLostCard: BlockLostCardResponse!
+  blockStolenCard: BlockStolenCardResponse!
+
+  """
+  Used for updating card pin code. You need to know the current one for this
+  """
+  changePin(input: ChangePinRequest!): ChangePinResponse!
+  createVirtualCardAdmin(input: CreateVirtualCardAdminRequest!): CreateVirtualCardAdminResponse!
+  createVirtualCard(design: String = "GREEN"): CreateVirtualCardResponse!
+
+  """Used to get credential to be able to add card to XPayWallet"""
+  initiateCardDigitalization(input: InitiateCardDigitalizationRequest!): InitiateCardDigitalizationResponse!
+  lockCard: LockCardResponse!
+
+  """Request a physical card, automatically free of charge."""
+  requestPhysicalCardAdmin(input: RequestPhysicalCardAdminRequest!): RequestPhysicalCardAdminResponseError!
+
+  """
+  Request a physical card, response is a payment url for the price of the card.
+  """
+  requestPhysicalCard(input: RequestPhysicalCardRequest!): RequestPhysicalCardResponseError!
+
+  """
+  Used to reset card pin code, in case it is forgotten. Card will need to be use in a atm afterwards
+  """
+  resetPin(input: ResetPinRequest!): ResetPinResponse!
+  unlockCard: UnlockCardResponse!
+  unlockPin: UnlockPinResponse!
+  updateCardLimitAdmin(input: UpdateCardLimitAdminRequest!): UpdateCardLimitAdminResponse!
+  updateCardOptionsAdmin(input: UpdateCardOptionsAdminRequest!): UpdateCardOptionsAdminResponse!
+  cancelCardAcquisition: CancelCardAcquisitionResponse!
+  captureUncapturedTransactionAdmin(batchSize: Float = 50): CaptureUncapturedTransactionResponse!
+  createBaasAcquisitions: CreateBaasAcquisitionsResponse!
+
+  """This mutation is only used in development"""
+  creditWalletDev(input: CreditWalletDevRequest!): CreditWalletDevResponse!
+  requestExternalCardAcquisitionLink(input: RequestExternalCardAcquisitionLinkRequest!): RequestExternalCardAcquisitionLinkResponse!
+  updateCardAcquisitionOverdraft(input: UpdateCardAcquisitionOverdraftRequest!): UpdateCardAcquisitionOverdraftResponse!
+  validateCardAcquisitionAdmin(input: ValidateCardAcquisitionAdminRequest!): ValidateCardAcquisitionAdminResponse!
+  validateCardAcquisition(input: ValidateCardAcquisitionRequest!): ValidateCardAcquisitionResponse!
+  insertMerchantWithSiret(fileName: String!): InsertMerchantWithSiretResponse!
+  upsertMerchant(input: UpsertMerchantRequest!): UpsertMerchantResponse!
+  resetCache: String!
+}
+
+input AddOrganizationAdminAdminRequest {
+  email: String!
+  firstname: String!
+  lastname: String!
+  organizationId: ID!
+}
+
+input AddOrganizationAdminRequest {
+  email: String!
+  firstname: String!
+  lastname: String!
+  birthday: DateTime
+}
+
+input AskEmployeeDeviceValidationTokenRequest {
+  email: String!
+  method: device_validation_method_enum!
+  deviceId: String!
+}
+
+enum device_validation_method_enum {
+  SMS
+}
+
+input AskNewEmployeeSmsTokenRequest {
+  """used to check if user exists"""
+  email: String!
+  mobile: String!
+  deviceId: String
+}
+
+input CreateEmployeeRequest {
+  """email of the employee"""
+  email: String!
+
+  """firstname of the employee"""
+  firstname: String!
+
+  """lastname of the employee"""
+  lastname: String!
+
+  """birthday of the employee"""
+  birthday: DateTime!
+
+  """which days employee is supposed to get a meal ticket"""
+  mealTicketDays: MealTicketDaysInput!
+
+  """defaultAuthorizedOverdraft of the employee"""
+  defaultAuthorizedOverdraft: Float!
+
+  """organization id"""
+  organizationId: String
+}
+
+input CreateOrganizationAdminDevRequest {
+  email: String!
+  firstname: String!
+  lastname: String!
+}
+
+input LoginEmployeeRequest {
+  email: String!
+
+  """code, choosen by the user to login"""
+  code: String!
+  deviceId: String
+}
+
+input LoginEmployeeNewDeviceIdRequest {
+  email: String!
+
+  """code, choosen by the user to login"""
+  code: String!
+
+  """Token received as an answer from askEmployeeDeviceId"""
+  token: String!
+
+  """Code received by the user"""
+  validationCode: String!
+}
+
+input LogoutEmployeeRequest {
+  deviceToken: String!
+  refreshToken: String!
+}
+
+input LoginOrganizationAdminRequest {
+  email: String!
+
+  """password, choosen by the user to login"""
+  password: String!
+}
+
+input RefreshTokenRequest {
+  expiredJwt: String!
+  refreshToken: String!
+}
+
+input RegisterOrganizationAdminRequest {
+  email: String!
+
+  """token that has been sent at user creation by email"""
+  token: String!
+
+  """password, choosen by the user to login"""
+  password: String!
+  siret: String!
+
+  """optional name of the organization if siret is not validated by the api"""
+  name: String
+
+  """
+  optional address of the organization if siret is not validated by the api
+  """
+  address: AddressRequest
+}
+
+input AddressRequest {
+  street: String!
+  city: String!
+  postalCode: String!
+}
+
+input SetEmployeeAccountAdminRequest {
+  email: String!
+  mobile: String!
+  design: String = "GREEN"
+}
+
+input SetEmployeeAccountRequest {
+  email: String!
+
+  """token that has been sent at user creation by email"""
+  token: String!
+
+  """code, choosen by the user to login"""
+  code: String!
+  deviceId: String
+}
+
+input SetEmployeeCodeRequest {
+  email: String!
+
+  """token that has been sent at user creation by email"""
+  token: String!
+
+  """code, choosen by the user to login"""
+  code: String!
+  deviceId: String
+}
+
+input SetMealTicketConfigRequest {
+  """
+  Coverage percent must be between legal values. Percent must be between 0 and 100
+  """
+  coveragePercent: Float
+
+  """meal ticket must be below legal limit and above 0"""
+  mealTicketAmount: Float
+
+  """must be between 0 and 28 so that we have one every month"""
+  mealTicketDay: Int
+
+  """
+  Does the admin want meal ticket to be renewed automatically (1 year max)
+  """
+  mealTicketAutoRenew: Boolean
+
+  """How much the organization pay for his employees physical card price"""
+  physicalCardCoverage: Float
+
+  """
+  How much the organization pay for his first employees physical card price
+  """
+  firstPhysicalCardCoverage: Float
+}
+
+input SetOrganizationAdminPasswordRequest {
+  email: String!
+
+  """token that has been sent at user creation by email"""
+  token: String!
+
+  """password, choosen by the user to login"""
+  password: String!
+}
+
+input UpdateEmployeeCodeRequest {
+  """current code, choosen by the user at login"""
+  currentCode: String!
+
+  """new code, choosen by the user to replace the current one"""
+  newCode: String!
+}
+
+input UpdateEmployeeRequest {
+  firstname: String
+  lastname: String
+}
+
+input UpdateOrganizationAdminRequest {
+  organizationAdminId: ID!
+  firstname: String
+  lastname: String
+  email: String
+}
+
+input UpdateOrganizationAdminPasswordRequest {
+  currentPassword: String!
+  newPassword: String!
+}
+
+input CreateNewOrganizationAdminRequest {
+  email: String!
+  firstname: String!
+  lastname: String!
+  organizationName: String!
+  commission: Float!
+  commissionType: commission_type_enum!
+  advantageInShops: Float!
+  physicalCardPrice: Float!
+  firstPhysicalCardPrice: Float!
+  physicalCardCoverage: Float
+  firstPhysicalCardCoverage: Float
+}
+
+input LoginSuperAdminRequest {
+  email: String!
+  password: String!
+}
+
+input AcceptNotificationRequest {
+  acceptNotification: Boolean!
+}
+
+input CreateTransactionDevRequest {
+  """Max 25"""
+  numberToCreate: Int!
+
+  """create transactions for today ?"""
+  today: Boolean = false
+
+  """Amount you want for of each transaction"""
+  amount: Float
+  email: String!
+}
+
+input DistributeCashbackAdminRequest {
+  transactionId: ID!
+}
+
+input FetchExternalTransactionRequest {
+  from: DateTime
+  to: DateTime
+  externalPaymentId: String
+}
+
+input ChangePinRequest {
+  currentPin: String!
+  newPin: String!
+  confirmPin: String!
+}
+
+input CreateVirtualCardAdminRequest {
+  email: String!
+  design: String = "GREEN"
+}
+
+input InitiateCardDigitalizationRequest {
+  xPayProvider: x_pay_provider_enum!
+  certificates: [String!]
+  nonce: String
+  nonceSignature: String
+}
+
+enum x_pay_provider_enum {
+  APPLE
+  SAMSUNG
+  GOOGLE
+}
+
+input RequestPhysicalCardAdminRequest {
+  newPin: String!
+  confirmPin: String!
+  city: String!
+  postalCode: String!
+  street: String!
+  additionnalAddress: String
+  email: String!
+}
+
+input RequestPhysicalCardRequest {
+  newPin: String!
+  confirmPin: String!
+  city: String!
+  postalCode: String!
+  street: String!
+  additionnalAddress: String
+}
+
+input ResetPinRequest {
+  newPin: String!
+  confirmPin: String!
+}
+
+input UpdateCardLimitAdminRequest {
+  limitPaymentDay: Float!
+  paymentDailyLimit: Float!
+}
+
+input UpdateCardOptionsAdminRequest {
+  nfc: Boolean
+  foreign: Boolean
+  online: Boolean
+}
+
+input CreditWalletDevRequest {
+  employeeEmail: String!
+  amount: Float!
+}
+
+input RequestExternalCardAcquisitionLinkRequest {
+  """The amount to authorize, max 200. Nullable if replacing an existing"""
+  authorizedOverdraft: Float
+}
+
+input UpdateCardAcquisitionOverdraftRequest {
+  """The amount to authorize, max 200"""
+  authorizedOverdraft: Float!
+}
+
+input ValidateCardAcquisitionAdminRequest {
+  orderId: String!
+  employeeId: String!
+  externalEmployeeId: String!
+
+  """The amount to authorize, max 200. Nullable if replacing an existing"""
+  authorizedOverdraft: Float
+}
+
+input ValidateCardAcquisitionRequest {
+  orderId: String!
+}
+
+input UpsertMerchantRequest {
+  """
+  internal merchantId, provide if you want to update an existing record, if not provided it will be an insert
+  """
+  merchantId: ID
+  mid: String
+  name: String
+  mcc: String
+  siret: String
+  advantageForm: String
+  pointOfSaleType: point_of_sale_type_enum
+  description: String
+  phone: String
+  city: String
+  postalCode: String
+  street: String
+  longitude: Float
+  latitude: Float
+  email: String
+  website: String
+  bio: Int
+  local: Int
+  vegetarian: Int
+  antiwaste: Int
+  nowaste: Int
+  inclusive: Int
+  imageLinks: [String!] = []
+  deliveryCities: [String!]
+  attribute: String
+  labelName: String
+  reviewLink: String
+  isHidden: Boolean
+  isBlacklisted: Boolean
+  filterCodes: [String!]
+}
