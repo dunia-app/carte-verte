@@ -62,6 +62,17 @@ export async function acceptTransaction(
     )
   }
 
+  // End of experimentation 01/07/2025
+  if (new Date() > new Date('2025-07-01')) {
+    validationProps.declinedReason = TransactionDeclinedReason.CARD_LOCKED
+    validationProps.responseCode = ExternalValidationResponseCode.DECLINED
+    return saveDecisionAndReturn(
+      validationProps,
+      command.time,
+      externalValidationRepo,
+    )
+  }
+
   // Ekip blacklist to prevent auto card acquisition
   if (command.merchantId === ekipMid) {
     validationProps.declinedReason = TransactionDeclinedReason.MERCHANT_INVALID

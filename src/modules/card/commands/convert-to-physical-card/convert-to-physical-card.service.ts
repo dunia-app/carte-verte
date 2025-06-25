@@ -12,7 +12,6 @@ import {
   NotFoundException,
 } from '../../../../libs/exceptions/index'
 import { EmployeeRepositoryPort } from '../../../organization/database/employee/employee.repository.port'
-import { OrganizationRepositoryPort } from '../../../organization/database/organization/organization.repository.port'
 import { CardRepositoryPort } from '../../database/card/card.repository.port'
 import { PinCode } from '../../domain/value-objects/pin-code.value-object'
 import { CardPinFormatNotCorrectError } from '../../errors/card.errors'
@@ -34,14 +33,18 @@ export async function convertToPhysicalCard(
   const employeeRepo: EmployeeRepositoryPort = unitOfWork.getEmployeeRepository(
     command.correlationId,
   )
-  const organizationRepo: OrganizationRepositoryPort =
-    unitOfWork.getOrganizationRepository(command.correlationId)
+
+  // End of experimentation 01/07/2025
+  if (new Date() > new Date('2025-07-01')) {
+    return Result.err(
+      new NotFoundException(
+        'Card creation is not allowed after experimentation ended',
+      ),
+    )
+  }
 
   const card = await cardRepo.findOneByIdOrThrow(command.cardId)
   const employee = await employeeRepo.findOneByIdOrThrow(card.employeeId)
-  const organization = await organizationRepo.findOneByIdOrThrow(
-    employee.organizationId,
-  )
 
   const cacheResult = await redis.persist.get(
     `initiateCardConversion:${card.id.value}`,

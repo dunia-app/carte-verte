@@ -4,23 +4,23 @@ import {
   Injectable,
   SetMetadata,
   UseGuards,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { ExtractJwt } from 'passport-jwt';
-import { getClientIp } from 'request-ip';
-import { getRequest, logger } from '../../helpers/application.helper';
-import { decodeJWT } from '../../helpers/string.helper';
-import { UUID } from '../../libs/ddd/domain/value-objects/uuid.value-object';
-import { JwtPayload } from '../../modules/auth/dto/auth.dto';
-import { EmployeeEntity } from '../../modules/organization/domain/entities/employee.entity';
-import { OrganizationAdminEntity } from '../../modules/organization/domain/entities/organization-admin.entity';
-import { SuperAdminEntity } from '../../modules/user/domain/entities/super-admin.entity';
-import { UserEntity } from '../../modules/user/domain/entities/user.entity';
-import { UserRoles } from '../../modules/user/domain/entities/user.types';
-import { IpAddress } from '../../modules/user/domain/value-objects/ip-address.value-object';
-import { UnitOfWork } from '../database/unit-of-work/unit-of-work';
-import { AppAuthGuard } from './auth.guard';
-const cryptoRandomString = require('crypto-random-string');
+} from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
+import { ExtractJwt } from 'passport-jwt'
+import { getClientIp } from 'request-ip'
+import { getRequest, logger } from '../../helpers/application.helper'
+import { decodeJWT } from '../../helpers/string.helper'
+import { UUID } from '../../libs/ddd/domain/value-objects/uuid.value-object'
+import { JwtPayload } from '../../modules/auth/dto/auth.dto'
+import { EmployeeEntity } from '../../modules/organization/domain/entities/employee.entity'
+import { OrganizationAdminEntity } from '../../modules/organization/domain/entities/organization-admin.entity'
+import { SuperAdminEntity } from '../../modules/user/domain/entities/super-admin.entity'
+import { UserEntity } from '../../modules/user/domain/entities/user.entity'
+import { UserRoles } from '../../modules/user/domain/entities/user.types'
+import { IpAddress } from '../../modules/user/domain/value-objects/ip-address.value-object'
+import { UnitOfWork } from '../database/unit-of-work/unit-of-work'
+import { AppAuthGuard } from './auth.guard'
+const cryptoRandomString = require('crypto-random-string')
 import _ = require('lodash')
 
 export function RoleGuard(role: UserRoles): MethodDecorator & ClassDecorator {
@@ -94,6 +94,10 @@ class GuardRole implements CanActivate {
       if (user instanceof EmployeeEntity) {
         currentRole = UserRoles.employee
         if (user.isFrozen) {
+          return false
+        }
+        // End of access to app 29/07/2025
+        if (new Date() > new Date('2025-07-29')) {
           return false
         }
         // Get deviceId from jwt

@@ -26,6 +26,15 @@ export async function createVirtualCard(
     return Result.err(new CardAlreadyExistsError())
   }
 
+  // End of experimentation 01/07/2025
+  if (new Date() > new Date('2025-07-01')) {
+    return Result.err(
+      new CardAlreadyExistsError(
+        'Card creation is not allowed after experimentation ended',
+      ),
+    )
+  }
+
   const baasCardRes = await baas.createVirtualCard({
     externalEmployeeId: command.externalEmployeeId,
   })
