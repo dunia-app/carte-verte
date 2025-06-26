@@ -13,9 +13,9 @@ RUN yarn install
 # Build the application
 RUN yarn build
 
-# Ensure permissions are set correctly
+# Ensure permissions are set correctly for all scripts
 RUN chmod 755 /app/dist/src/main.js
-RUN chmod +x /app/scripts/entrypoint.sh
+RUN chmod -R +x /app/scripts
 
 # Set the entrypoint to the script
 ENTRYPOINT ["/app/scripts/entrypoint.sh"]
